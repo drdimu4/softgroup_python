@@ -1,29 +1,4 @@
-def filter_email(emails):
-    email=[]
-    for mail in emails:
-        if '@' in mail:
-            name = mail[0:(mail.find('@'))]
-            flag = True
-            for i in name:
-                if not(i.isalnum() or '_' in i):
-                    flag = False
-            if flag==True:
-                dom = mail[(mail.find('@')):]
-                flag = True
-                for i in dom:
-                    if not(i.isalnum() or '.' in i):
-                        print(i)
-                if flag==True:
-                    dom = dom.split('.')
-                for st in dom:
-                    if not st == '':
-                        continue
-                else:
-                    continue
-                email.append(mail)
-    return email
-
-def fil(emails):
+def filter_func(emails):
     res = []
     for email in emails:
         mail = email.partition('@')
@@ -50,4 +25,4 @@ def fil(emails):
 
 emails = ['ab/c@gmail.com.ua', '*@ank.com', '_ny@us.gov.us', 'z@b.k']
 
-print(fil(emails))
+print(filter_func(emails))
