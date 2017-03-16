@@ -23,6 +23,6 @@ def six(n:int):
 
 def fine_print(n: int):
     for i in range(1,n+1):
-        print(i,'          ',eight(i),'          ',six(i),'          ',two(i))
+        print('{0:<10}{1:10}{2:10}{3:10}'.format(i,eight(i),six(i),two(i)))
 
 fine_print(15)
