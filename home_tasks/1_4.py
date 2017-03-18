@@ -18,11 +18,15 @@ def filter_func(emails):
             continue
         else:
             dom = mail[2].split('.')
-
-        if len(dom)>2 and (not '' in dom):
+            print(dom)
+            print(len(dom))
+            length=0
+            for each in dom:
+                length+= len(each)
+        if length>2 and (not '' in dom):
             res.append(email)
     return res
 
-emails = ['ab/c@gmail.com.ua', '*@ank.com', '_ny@us.gov.us', 'z@b.k']
+emails = ['abs@co.com','ab/c@gmail.com.ua', '*@ank.com', '_ny@us.gov.us', 'z@b.k']
 
 print(filter_func(emails))
