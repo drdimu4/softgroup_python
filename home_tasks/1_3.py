@@ -7,6 +7,8 @@ def decorator(function):
             print('Input args:',*args)
             print('Input kwargs {}'.format(kwargs))
             return None
+        except Exception as det:
+            print(det)
         else:
             return function(*args,**kwargs)
     return wrapper
