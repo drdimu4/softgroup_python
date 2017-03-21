@@ -12,8 +12,6 @@ class Lists:
     def print(self):
         print(self.a)
 
-
-
 l = Lists()
 
 l.conv([1,2,3,5,[6,7,[8,9]]])
