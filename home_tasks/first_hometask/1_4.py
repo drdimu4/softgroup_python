@@ -18,8 +18,6 @@ def filter_func(emails):
             continue
         else:
             dom = mail[2].split('.')
-            print(dom)
-            print(len(dom))
             length=0
             for each in dom:
                 length+= len(each)
@@ -27,6 +25,6 @@ def filter_func(emails):
             res.append(email)
     return res
 
-emails = ['abs@co.com','ab/c@gmail.com.ua', '*@ank.com', '_ny@us.gov.us', 'z@b.k']
+emails = ['abc@gmail.com.ua', '*@ank.com', '_ny@us.gov.us', 'z@co.com']
 
 print(filter_func(emails))
