@@ -1,10 +1,9 @@
 import html
 
 def writer(s:str):
-    print( s)
+
     def my_decorator(func_to_dec):
 
-        print(1)
         def wrapper(func_arg):
             for char in s:
                 if char == 'b':
@@ -17,6 +16,7 @@ def writer(s:str):
                     func_arg = html_u(func_arg)
 
             return func_to_dec(func_arg)
+
         return wrapper
 
     return my_decorator
