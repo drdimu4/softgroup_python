@@ -47,10 +47,10 @@ class AbstractConverter(ABC):
 
 class ConverterFabric(AbsConverterFabric):                              #Я так и не понял как заставить
     def create_converter(self, _from: str, _to: str) -> object:         #обьект применять нужные функции(((
-        self._from = _from                                              #Но конвертация вроде как робочая))
-        self._to = _to                                                  #
-        return self
 
+        self.__setattr__(self,'load')
+        self.__setattr__(self,'save')
+        return self
 
 if __name__ == '__main__':
     fab = ConverterFabric()
