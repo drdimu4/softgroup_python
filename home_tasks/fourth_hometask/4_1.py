@@ -1,4 +1,5 @@
 import time
+import datetime
 import random
 from threading import Thread,Lock,RLock
 def worker(file: object, i):
@@ -7,9 +8,10 @@ def worker(file: object, i):
     synchronization
      primitive :param file: file-object :return: '''
     with lock:
-        file.write('thread_'+str(i) + ': ' + 'started.\n')
-        time.sleep(random.random() * 2)
-        file.write('thread_'+str(i) + ': ' + 'done.\n')
+        current_time = datetime.datetime.now()
+        file.write("{:%H:%M:%S}".format(current_time) + ' thread_'+str(i) + ': ' + 'started.\n')
+        time.sleep(random.random() * 5)
+        file.write("{:%H:%M:%S}".format(current_time)+' thread_'+str(i) + ': ' + 'done.\n')
 
 
 if __name__ == '__main__':
