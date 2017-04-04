@@ -8,10 +8,9 @@ def worker(file: object, i):
     synchronization
      primitive :param file: file-object :return: '''
     with lock:
-        current_time = datetime.datetime.now()
-        file.write("{:%H:%M:%S}".format(current_time) + ' thread_'+str(i) + ': ' + 'started.\n')
-        time.sleep(random.random() * 5)
-        file.write("{:%H:%M:%S}".format(current_time)+' thread_'+str(i) + ': ' + 'done.\n')
+        file.write("{:%H:%M:%S}".format(datetime.datetime.now()) + ' thread_'+str(i) + ': ' + 'started.\n')
+        time.sleep(random.random() * 3)
+        file.write("{:%H:%M:%S}".format(datetime.datetime.now())+' thread_'+str(i) + ': ' + 'done.\n')
 
 
 if __name__ == '__main__':
@@ -21,7 +20,6 @@ if __name__ == '__main__':
     for i in range(0,10):
         t = Thread(target=worker, args=(file,i))
         threads.append(t)
-    for t in threads:
         t.start()
     for t in threads:
         t.join()
