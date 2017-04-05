@@ -5,6 +5,7 @@ from lxml import html
 import threading
 import logging
 
+
 logging.basicConfig(level = logging.INFO)
 class Scrapper:
     def __init__(self,query,page_from,page_to, limit = 2):
@@ -45,8 +46,8 @@ class Scrapper:
                 thread = executor.submit(self.crawl,self.get_link(i+1))
                 thread.add_done_callback(self.notify(i+1))
                 list.extend(thread.result())
-        return list
 
+        return list
 
 
     def get_link(self, page):
@@ -73,7 +74,6 @@ class Scrapper:
             return items
     def notify(self,i):
         logging.info('Task done:{}'.format(self.get_link(i)))
-
 
 scrapper = Scrapper('iphone', 1, 2, limit=2)
 results = scrapper.start()
