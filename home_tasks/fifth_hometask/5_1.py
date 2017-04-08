@@ -23,11 +23,11 @@ if __name__ == '__main__':
         raise SystemExit(1)
 
     try:
-        temp = r.json().get('main').get('temp')-273.15   #Перевод с Кельвинов в Цельсий
+        temp = r.json().get('main').get('temp')-273.15
     except:
         print('Input right attributes')
         raise SystemExit(1)
-    print(temp)
+    print('Current temp',temp)
 
 
 
