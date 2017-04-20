@@ -44,12 +44,12 @@ async def run(r):
         res = req.get(item)
         root = html.fromstring(res.text)
         # list_of_posts.append(root.xpath('div[@class="content"]/text()'))
-        print(root.xpath('//div[@class="postbody"]//div[@class="content"]/position(1)'))
+        print(root.xpath('//div[@class="content"]')[0].xpath('descendant-or-self::text()'))
 
 
 def print_responses(result):
     print(result)
 
 loop = asyncio.get_event_loop()
-future = asyncio.ensure_future(run(2))
+future = asyncio.ensure_future(run(5))
 loop.run_until_complete(future)
