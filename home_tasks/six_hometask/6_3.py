@@ -4,7 +4,7 @@ from aiohttp import ClientSession
 from lxml import html
 import re
 import sqlite3
-
+import psycopg2
 
 async def fetch(url, session):
     async with session.get(url) as response:
@@ -100,6 +100,33 @@ p , c = find_money(posts)
 print(len(p))
 print(len(c))
 
+# '''
+# Sozdaem Bazu
+# '''
+
+conn = psycopg2.connect("dbname='postgres' user='postgres' host='localhost' password='9348'")
+cur = conn.cursor()
+
+cur.execute('''
+    CREATE TABLE IF NOT EXISTS posts(
+       id SERIAL PRIMARY KEY,
+       author TEXT NOT NULL,
+       url TEXT NOT NULL,
+       topics TEXT NOT NULL,
+       post_text TEXT NOT NULL,
+       price TEXT NOT NULL,
+       currency TEXT NOT NULL
+    );
+    ''')
+
+for i in range (1,len(author)):
+    cur.execute('''INSERT INTO posts(id, author, url, topics, post_text, price, currency)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s);''',(i,author[i-1],pages[i-1],list_of_topics[i-1],posts[i-1],p[i-1],c[i-1]))
+
+
+
+conn.commit()
+conn.close()
 
 # body = html.fromstring(bodies[21])
 # print(body.xpath('//div[@class="content"]')[0].xpath('descendant-or-self::text()'))
