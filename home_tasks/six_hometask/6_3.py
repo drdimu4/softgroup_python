@@ -100,18 +100,7 @@ p , c = find_money(posts)
 print(len(p))
 print(len(c))
 
-conn=sqlite3.connect('Simple_base.db')
-c = conn.cursor()
-c.execute('''create table overclocks (id integer PRIMARY KEY NOT NULL , title text, url text, author text, text_topic text, price real,currency text)''')
 
-for i in range(len(author)):
-    c.execute("INSERT INTO overclocks (id,title,url,author,text_topic,price,currency) VALUES ('%s','%s','%s','%s','%s','%s','%s')" % (i,list_of_topics[i], pages[i], author[i],posts[i],p[i],c[i]))
-    # c.executemany('INSERT INTO overclocks VALUES (?,?,?,?,?,?,?)', i,list_of_topics[i], pages[i], author[i],posts[i],p[i],c[i])
-
-# Сохранение (commit) изменений
-conn.commit()
-# Закрытие курсора, в случае если он больше не нужен
-c.close()
 # body = html.fromstring(bodies[21])
 # print(body.xpath('//div[@class="content"]')[0].xpath('descendant-or-self::text()'))
 
