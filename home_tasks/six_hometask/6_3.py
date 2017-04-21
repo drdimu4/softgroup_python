@@ -1,9 +1,7 @@
 import asyncio
-import requests as req
 from aiohttp import ClientSession
 from lxml import html
 import re
-import sqlite3
 import psycopg2
 
 async def fetch(url, session):
@@ -13,7 +11,7 @@ async def fetch(url, session):
 
 async def run(r):
     tasks = []
-    # Fetch all responses within one Client session,
+    # Fetch all responses ithin one Client session,
     # keep connection alive for all requests.
     async with ClientSession() as session:
         for i in range(r):
@@ -21,6 +19,7 @@ async def run(r):
             tasks.append(task)
         return await asyncio.gather(*tasks)
         # you now have all response bodies in this variable
+
 
 async def runn(pages):
     tasks = []
@@ -32,6 +31,7 @@ async def runn(pages):
             tasks.append(task)
         return await asyncio.gather(*tasks)
         # you now have all response bodies in this variable
+
 
 def parsing(responses):
     list = []
@@ -54,6 +54,7 @@ def parsing(responses):
 
     return new_list
 
+
 def find_money(posts):
     price = []
     currency = []
@@ -71,34 +72,25 @@ def find_money(posts):
 
 url = "http://forum.overclockers.ua/viewforum.php?f=26&start={}"
 
-
-
-
 loop = asyncio.get_event_loop()
 
 # Polychaem spisok tem
-result = loop.run_until_complete(run(1))
+result = loop.run_until_complete(run(5))
 
 # Polychaem ssulki
 list_of_topics = []
 author = []
 pages = parsing(result)
-print(len(author))
-print(len(pages))
-print(len(list_of_topics))
 
-
+#poluchaem text topikov
 bodies = loop.run_until_complete(runn(pages))
 
 posts = []
 for item in bodies:
     post = html.fromstring(item)
     posts.append((post.xpath('//div[@class="content"]')[0].xpath('descendant-or-self::text()')))
-print(len(posts))
 
 p , c = find_money(posts)
-print(len(p))
-print(len(c))
 
 # '''
 # Sozdaem Bazu
@@ -123,11 +115,5 @@ for i in range (1,len(author)):
     cur.execute('''INSERT INTO posts(id, author, url, topics, post_text, price, currency)
                     VALUES (%s,%s,%s,%s,%s,%s,%s);''',(i,author[i-1],pages[i-1],list_of_topics[i-1],posts[i-1],p[i-1],c[i-1]))
 
-
-
 conn.commit()
 conn.close()
-
-# body = html.fromstring(bodies[21])
-# print(body.xpath('//div[@class="content"]')[0].xpath('descendant-or-self::text()'))
-
