@@ -11,7 +11,7 @@ async def fetch(url, session):
 
 async def run(r):
     tasks = []
-    # Fetch all responses ithin one Client session,
+    # Fetch all responses within one Client session,
     # keep connection alive for all requests.
     async with ClientSession() as session:
         for i in range(r):
@@ -46,6 +46,7 @@ def parsing(responses):
         # list.append(root.xpath('//a[@class="topictitle"]/@href'))
         author.extend(root.xpath('//dd[@class="author"]/a/text()'))
         # list.append(root.xpath('//dd[@class="author"]/a/text()'))
+
     new_list = []
     for item in list:
         str = 'http://forum.overclockers.ua/'
@@ -70,50 +71,67 @@ def find_money(posts):
             currency.append(result[0][1])
     return price,currency
 
-url = "http://forum.overclockers.ua/viewforum.php?f=26&start={}"
+def check_if_exists(cursor, author, topic_title):
+    cursor.execute('''SELECT author FROM posts WHERE topics = (%s) AND author = (%s)''',
+                               (topic_title, author))
+    result = cursor.fetchone()
 
-loop = asyncio.get_event_loop()
+    if result:
+        return True
+    return False
 
-# Polychaem spisok tem
-result = loop.run_until_complete(run(5))
+if __name__ == '__main__':
+    url = "http://forum.overclockers.ua/viewforum.php?f=26&start={}"
 
-# Polychaem ssulki
-list_of_topics = []
-author = []
-pages = parsing(result)
+    loop = asyncio.get_event_loop()
 
-#poluchaem text topikov
-bodies = loop.run_until_complete(runn(pages))
+    # Polychaem spisok tem
+    result = loop.run_until_complete(run(4))
 
-posts = []
-for item in bodies:
-    post = html.fromstring(item)
-    posts.append((post.xpath('//div[@class="content"]')[0].xpath('descendant-or-self::text()')))
+    # Polychaem ssulki
+    list_of_topics = []
+    author = []
+    pages = parsing(result)
 
-p , c = find_money(posts)
+    #poluchaem text topikov
+    bodies = loop.run_until_complete(runn(pages))
 
-# '''
-# Sozdaem Bazu
-# '''
+    posts = []
+    for item in bodies:
+        post = html.fromstring(item)
+        posts.append((post.xpath('//div[@class="content"]')[0].xpath('descendant-or-self::text()')))
 
-conn = psycopg2.connect("dbname='postgres' user='postgres' host='localhost' password='9348'")
-cur = conn.cursor()
+    p , c = find_money(posts)
 
-cur.execute('''
-    CREATE TABLE IF NOT EXISTS posts(
-       id SERIAL PRIMARY KEY,
-       author TEXT NOT NULL,
-       url TEXT NOT NULL,
-       topics TEXT NOT NULL,
-       post_text TEXT NOT NULL,
-       price TEXT NOT NULL,
-       currency TEXT NOT NULL
-    );
-    ''')
+    # '''
+    # Sozdaem Bazu
+    # '''
 
-for i in range (1,len(author)):
-    cur.execute('''INSERT INTO posts(id, author, url, topics, post_text, price, currency)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s);''',(i,author[i-1],pages[i-1],list_of_topics[i-1],posts[i-1],p[i-1],c[i-1]))
+    conn = psycopg2.connect("dbname='postgres' user='postgres' host='localhost' password=''")
+    cur = conn.cursor()
 
-conn.commit()
-conn.close()
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS posts(
+           id SERIAL PRIMARY KEY,
+           author TEXT NOT NULL,
+           url TEXT NOT NULL,
+           topics TEXT NOT NULL,
+           post_text TEXT NOT NULL,
+           price TEXT NOT NULL,
+           currency TEXT NOT NULL
+        );
+        ''')
+
+    ins_count = 0
+    for i in range (1, len(author)):
+        topic_author = author[i-1]
+        topic_title = list_of_topics[i-1]
+
+        if not check_if_exists(cur, topic_author, topic_title):
+            cur.execute('''INSERT INTO posts(author, url, topics, post_text, price, currency)
+                            VALUES (%s,%s,%s,%s,%s,%s);''',(topic_author, pages[i-1],topic_title,posts[i-1],p[i-1],c[i-1]))
+            ins_count += 1
+
+    conn.commit()
+    print('Rows inserted: {}'.format(ins_count))
+    conn.close()
