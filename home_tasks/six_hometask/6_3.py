@@ -107,7 +107,7 @@ if __name__ == '__main__':
     # Sozdaem Bazu
     # '''
 
-    conn = psycopg2.connect("dbname='postgres' user='postgres' host='localhost' password='9907black'")
+    conn = psycopg2.connect("dbname='postgres' user='postgres' host='localhost' password=''")
     cur = conn.cursor()
 
     cur.execute('''
