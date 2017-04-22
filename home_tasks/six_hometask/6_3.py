@@ -1,35 +1,23 @@
 import asyncio
-from aiohttp import ClientSession
+import aiohttp
 from lxml import html
 import re
 import psycopg2
+import sys
 
 async def fetch(url, session):
     async with session.get(url) as response:
         return await response.read()
 
 
-async def run(r):
-    tasks = []
-    # Fetch all responses within one Client session,
-    # keep connection alive for all requests.
-    async with ClientSession() as session:
-        for i in range(r):
-            task = asyncio.ensure_future(fetch(url.format(i*40), session))
-            tasks.append(task)
-        return await asyncio.gather(*tasks)
-        # you now have all response bodies in this variable
-
-
 async def runn(pages):
     tasks = []
     # Fetch all responses within one Client session,
     # keep connection alive for all requests.
-    async with ClientSession() as session:
-        for item in pages:
-            task = asyncio.ensure_future(fetch(item, session))
-            tasks.append(task)
-        return await asyncio.gather(*tasks)
+    for item in pages:
+        task = asyncio.ensure_future(fetch(item, session))
+        tasks.append(task)
+    return await asyncio.gather(*tasks)
         # you now have all response bodies in this variable
 
 
@@ -61,7 +49,7 @@ def find_money(posts):
     currency = []
     for post in posts:
         post = str(post)
-        patter = re.compile('(\d*)[ ]?(грн)')
+        patter = re.compile('(\d*)[\s]?(грн|\$|usd|dollars|долларов|гривен|гривень|ГРН|USD|Гривен|Гривень)')
         result = patter.findall(post)
         if result == []:
             price.append(0)
@@ -82,19 +70,28 @@ def check_if_exists(cursor, author, topic_title):
 
 if __name__ == '__main__':
     url = "http://forum.overclockers.ua/viewforum.php?f=26&start={}"
+    try:
+        pages_count = int(input('Pages count:'))
+    except:
+        sys.exit()
+
+    url_pages = []
+    for i in range(pages_count):
+        url_pages.append(url.format(i*40))
 
     loop = asyncio.get_event_loop()
 
-    # Polychaem spisok tem
-    result = loop.run_until_complete(run(4))
+    with aiohttp.ClientSession() as session:
+        # Polychaem spisok tem
+        result = loop.run_until_complete(runn(url_pages))
 
-    # Polychaem ssulki
-    list_of_topics = []
-    author = []
-    pages = parsing(result)
+        # Polychaem ssulki
+        list_of_topics = []
+        author = []
+        pages = parsing(result)
 
-    #poluchaem text topikov
-    bodies = loop.run_until_complete(runn(pages))
+        #poluchaem text topikov
+        bodies = loop.run_until_complete(runn(pages))
 
     posts = []
     for item in bodies:
@@ -107,8 +104,9 @@ if __name__ == '__main__':
     # Sozdaem Bazu
     # '''
 
-    conn = psycopg2.connect("dbname='postgres' user='postgres' host='localhost' password=''")
+    conn = psycopg2.connect("dbname='postgres' user='postgres' host='localhost' password='9348'")
     cur = conn.cursor()
+
 
     cur.execute('''
         CREATE TABLE IF NOT EXISTS posts(
