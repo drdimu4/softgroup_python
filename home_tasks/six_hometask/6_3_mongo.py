@@ -125,4 +125,3 @@ for i in range(0,len(urls)):
         posts.insert_one(post).inserted_id
 
 print(posts.count())
-
