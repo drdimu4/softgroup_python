@@ -1,0 +1,34 @@
+    {% extends "index.html" %}
+    {% block content %}
+  {% if results %}
+<div class="row">
+    <table class="table table-bordered table-striped">
+    <tr>
+        <th>Author</th>
+        <th>Price,Currency</th>
+        <th>Post name</th>
+        <th>Description</th>
+    </tr>
+        {% for result in results %}
+        <tr>
+           <td>{{ result.get('author') }}</td>
+           <td>{{ result.get('price'),result.get('currency') }}</td>
+           <td>{{ result.get('name') }}</td>
+            <td>
+            <form class="form-signin" method=POST action="{{ url_for('description') }}">
+{#            <td><a href="/description"  >Description</a></td>#}
+                <input type="text" name ="url" value="{{ result.get('url') }}" hidden>
+                <input type="text" name ="author" value="{{ result.get('author') }}" hidden>
+                <input type="text" name ="price" value="{{ result.get('price') }}" hidden>
+                <input type="text" name ="currency" value="{{ result.get('currency') }}" hidden>
+                <input type="text" name ="name" value="{{ result.get('name') }}" hidden>
+                <input type="text" name ="post_text" value="{{ result.get('post_text') }}" hidden>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Description</button>
+                </form>
+        </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+        {% endif %}
+ {% endblock %}

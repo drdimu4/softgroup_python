@@ -1,0 +1,57 @@
+{% extends "index.html" %}
+{% block content %}
+
+    <div>
+       <table class="table table-bordered">
+           <tr>
+               <td>
+                   <p>URL</p>
+               </td>
+               <td>
+                   <a href="{{ url }}">{{ url }}</a>
+               </td>
+           </tr>
+           <tr>
+               <td>
+                   <p>Author</p>
+               </td>
+               <td>
+                   <p>{{ author }}</p>
+               </td>
+           </tr>
+           <tr>
+               <td>
+                   <p>Price</p>
+               </td>
+               <td>
+                   <p>{{ price }}</p>
+               </td>
+           </tr>
+           <tr>
+               <td>
+                   <p>Currency</p>
+               </td>
+               <td>
+                   <p>{{ currency }}</p>
+               </td>
+           </tr>
+           <tr>
+               <td>
+                   <p>name</p>
+               </td>
+               <td>
+                   <p>{{ name }}</p>
+               </td>
+           </tr>
+           <tr>
+               <td>
+                   <p>Description </p>
+               </td>
+               <td>
+                   <p>{{ post_text }}</p>
+               </td>
+           </tr>
+       </table>
+    </div>
+
+{% endblock %}
