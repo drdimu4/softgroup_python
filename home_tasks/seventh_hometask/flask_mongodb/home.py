@@ -24,7 +24,11 @@ def index():
             currency = post.get('currency'),
             url = post.get('url')
             post_text = post.get('post_text')
-            dict = {'name': name, 'author': author, "price": price, 'currency': currency, 'url': url, 'post_text':post_text}
+            text = ''
+            for item in post_text:
+                text+=item
+
+            dict = {'name': name[0], 'author': author[0], "price": price[0], 'currency': currency[0], 'url': url, 'post_text':text}
             result.append(dict)
         return render_template('table.html',user = session['username'],results=result)
     return render_template('no_user.html')
@@ -57,7 +61,7 @@ def register():
             session['username'] = request.form['username']
             return redirect(url_for('index'))
 
-        return 'That username already exists!'
+        return render_template('register.html', message='This username is already exist')
 
     return render_template('register.html')
 
@@ -90,7 +94,7 @@ def search():
             currency = post.get('currency'),
             url = post.get('url')
             post_text = post.get('post_text')
-            dict = {'name': name, 'author': author, "price": price, 'currency': currency, 'url': url,
+            dict = {'name': name[0], 'author': author[0], "price": price[0], 'currency': currency[0], 'url': url,
                     'post_text': post_text}
             result.append(dict)
         return render_template('table.html', user=session['username'], results=result)
