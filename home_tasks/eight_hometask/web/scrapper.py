@@ -41,26 +41,43 @@ def parse(page):
         try:
             name_ = name_[0]
             symbol_ = symbol_[0]
+
             market_cap_ = market_cap_[0]
+            if '?' in market_cap_:
+                market_cap_ = 0
+
             price_ = price_[0]
+            if '?' in price_:
+                price_ = 0
+
             if len(supply_) == 0:
                 supply_ = (tr.xpath('td[@class = "no-wrap text-right"]/span/@data-supply'))
+
+
             supply_ = supply_[0]
+            if 'None' in supply_:
+                supply_ = 0
+
             volume_ = volume_[0]
+            if 'None' in volume_:
+                volume_ = 0
+
             if len(h1_) == 0:
-                h1_ = '?'
+                h1_ = 0
             else:
                 h1_ = h1_[0]
-
+                h1_ = h1_[0:(h1_.find('%'))]
             if len(h24_) == 0:
-                h24_ = '?'
+                h24_ = 0
             else:
                 h24_ = h24_[0]
+                h24_ = h24_[0:(h24_.find('%'))]
 
             if len(d7_) == 0:
-                d7_ = '?'
+                d7_ = 0
             else:
                 d7_ = d7_[0]
+                d7_ = d7_[0:(d7_.find('%'))]
         except:
             pass
 

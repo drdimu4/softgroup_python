@@ -1,0 +1,15 @@
+    {% extends "index.html" %}
+    {% block content %}
+      <form class="form-signin" method=POST action="{{ url_for('register') }}">
+        <h2 class="form-signin-heading">Registration</h2>
+        <label for="username" class="sr-only">Username</label>
+        <input type="text" name="username" class="form-control" placeholder="Username" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="password" required>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+        <h4 class="text-center">{{ message }}</h4>
+      </form>
+
+    {% endblock %}
+
+
